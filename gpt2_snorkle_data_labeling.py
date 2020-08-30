@@ -31,15 +31,7 @@ dir--hfdedpredictV3
 
 #!pip install "dvc[gdrive]"
 
-#git setup (run once)
-!git config --global user.email "reedrw@appstate.edu"
-!git config --global user.name "randy reed"
-!git init
-#!git add README.md
-#!git commit -m "first commit"
-!git branch -M master
-!git remote add origin https://randywreed:1834Calvin@github.com/randywreed/snorkel_gpt2.git
-#!git push -u origin master
+
 
 #from google.colab import drive
 #drive.mount('/gdrive')
