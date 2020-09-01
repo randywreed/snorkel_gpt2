@@ -15,6 +15,9 @@ ktrain
 dvc
 spacy
 nltk
+pandas
+cython
+
 
 ## Needed files
 biblical_names.csv
@@ -36,7 +39,7 @@ dir--hfdedpredictV3
 #from google.colab import drive
 #drive.mount('/gdrive')
 
-dirname="/home/jupyter/"
+dirname="/spell/snorkel_files/"
 #dirname='/gdrive/My Drive/AI & Tech Research/Religion of GPT2/'
 filename='biblical_names.csv'
 
@@ -119,6 +122,14 @@ import nltk
 nltk.download('punkt')
 from statistics import mean
 predictor=ktrain.load_predictor(dirname+'hfdedpredictV3')
+def flmean(x):
+    sum=0
+    for ele in x:
+        sum+=ele
+    res=sum/len(x)
+    return res
+
+
 @preprocessor(memoize=True)
 def bert_religion_classifier(x):
   sents=sent_tokenize(str(x.text))
@@ -130,8 +141,15 @@ def bert_religion_classifier(x):
     p=predictor.predict_proba(str(sent))
     sentR.append(p[0])
     sentS.append(p[1])
-  R=mean(sentR)
-  S=mean(sentS)
+  print('sentR={} sentS={}'.format(sentR,sentS))
+  if len(sentR)>1:
+    R=flmean(sentR)
+  else: 
+    R=sentR[0]
+  if len(sentS)>1:
+    S=flmean(sentS)
+  else:
+    S=sentS[0]
   if R>S:
     x.cat='R'
   else:
@@ -180,8 +198,8 @@ keyword_creation=make_keyword_lf(keywords=['creator','created','creation'])
 
 import pandas as pd
 #filename='dedoose_GPT2 Initial prompts and responses.csv'
-filename='gpt2HfDedPredictBertv3.csv'
-df=pd.read_csv(dirname+filename,error_bad_lines=False)
+filename='gpt2HfDedPredictBertv3short.csv'
+df=pd.read_csv(filename,error_bad_lines=False)
 #df.columns=['participant','group','prompt','resp','question','text'] #dedoose gpt2 prompts and responses
 df.head()
 
@@ -253,49 +271,11 @@ Ltest=applier.apply(df=test)
 
 import numpy as np
 
-np.savetxt('Snorkel_Ltrainv2.txt',Ltrain)
-np.savetxt('Snorkel_Ltestv2.txt',Ltest)
-np.savetxt('Snorkel_Ytestv2.txt',Ytest)
+np.save('Snorkel_Ltrainv2',Ltrain)
+np.save('Snorkel_Ltestv2',Ltest)
+np.save('Snorkel_Ytestv2',Ytest)
 
 
-'''
-#cov_lf_contains_bible_name, cov_lf_contains_bible_quote, cov_lf_contains_catholicism,cov_lf_first_person_sg,cov_lf_first_person_pl, \
-cov_lf_contains_bible_name, cov_lf_contains_bible_quote, cov_lf_contains_catholicism, \
-cov_lf_bert_religion, cov_lf_bert_secular, cov_lf_keywords = (Ltrain != ABSTAIN).mean(axis=0)
-
-print('bible name {}'.format(cov_lf_contains_bible_name*100))
-print('bible_quote {}'.format(cov_lf_contains_bible_quote*100))
-print('catholicism {}'.format(cov_lf_contains_catholicism*100))
-#print('first person {}'.format(cov_lf_first_person_sg*100))
-#print('first person pl {}'.format(cov_lf_first_person_pl*100))
-print('bert religion {}'.format(cov_lf_bert_religion*100))
-print('bert secular {}'.format(cov_lf_bert_secular*100))
-print('keywords {}'.format(cov_lf_keywords))
-
-from snorkel.labeling import LFAnalysis
-LFAnalysis(L=Ltrain, lfs=lfs).lf_summary()
-
-pd.set_option('display.max_colwidth',1000)
-edf=train.eq(df.iloc[:,0],axis=0).all(1)
-print(edf.value_counts())
-for idx,e in edf.iteritems():
-  if e==True:
-    print (idx)
-
-fdf=train.iloc[Ltrain[:,4]==ABSTAIN]
-fdf['text']
-
-from snorkel.utils import to_int_label_array
-print(Ltrain.shape)
-print(type(to_int_label_array(Ltrain,flatten_vector=True)))
-
-from snorkel.analysis import get_label_buckets
-
-#No biblical name, but biblical quote 
-from snorkel.utils import to_int_label_array
-buckets=get_label_buckets(Ltrain[:,0],Ltrain[:,1],Ltrain[:,2],Ltrain[:,3],Ltrain[:,4],Ltrain[:,5],Ltrain[:,6],Ltrain[:,7],Ltrain[:,8],Ltrain[:,9],Ltrain[:,10],Ltrain[:,11])
-train.iloc[buckets[(ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN,ABSTAIN)]] #.sample(10,random_state=1)
-'''
 
 from snorkel.labeling.model import LabelModel
 
@@ -440,7 +420,10 @@ edf.to_csv('snorkel_testset_exceptions.csv')
 
 #df_train_filtered.head()
 
-df_train_filtered.drop('prob_cat',axis=1)
+print('df_train_filtered')
+print(df_train_filtered.head())
+print(df_train_filtered.columns)
+#df_train_filtered.drop('prob_cat',axis=1)
 
 #add labels to df
 df_train_filtered['prob_R']=probs_train_filtered[:,0]
