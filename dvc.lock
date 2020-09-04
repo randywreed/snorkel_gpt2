@@ -6,3 +6,13 @@ prepare:
   outs:
   - path: prepare
     md5: 62a9c0ec7350ea7616145949efbf39f0.dir
+label:
+  cmd: python3 gpt_snorkel_label.py label prepare ktrain
+  deps:
+  - path: gpt_snorkel_label.py
+    md5: dd1ca84bf26968eefc8d6f8ec3d2ac91
+  - path: prepare
+    md5: 62a9c0ec7350ea7616145949efbf39f0.dir
+  outs:
+  - path: label
+    md5: 37c357c5786ba64853c206ec569f814e.dir
