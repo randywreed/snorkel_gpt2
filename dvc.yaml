@@ -12,3 +12,10 @@ stages:
     - prepare
     outs:
     - label
+  label_model:
+    cmd: python3 gpt_snorkel_label_model.py snorkel_model label prepare
+    deps:
+    - gpt_snorkel_label_model.py
+    - label
+    outs:
+    - snorkel_model

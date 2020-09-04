@@ -16,3 +16,13 @@ label:
   outs:
   - path: label
     md5: 37c357c5786ba64853c206ec569f814e.dir
+label_model:
+  cmd: python3 gpt_snorkel_label_model.py snorkel_model label prepare
+  deps:
+  - path: gpt_snorkel_label_model.py
+    md5: 53a01c8e9874c816f9c55dbcc7fe8a81
+  - path: label
+    md5: c786a6f7cf88ceee7d7b5af317e5cd94.dir
+  outs:
+  - path: snorkel_model
+    md5: bd603ad1854a64d034e730d277425a04.dir
