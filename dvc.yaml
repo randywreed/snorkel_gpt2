@@ -1,0 +1,7 @@
+stages:
+  prepare:
+    cmd: python3 gpt_snorkel_data_prepare.py
+    deps:
+    - gpt_snorkel_data_prepare.py
+    outs:
+    - prepare
