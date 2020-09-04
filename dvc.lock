@@ -20,9 +20,9 @@ label_model:
   cmd: python3 gpt_snorkel_label_model.py snorkel_model label prepare
   deps:
   - path: gpt_snorkel_label_model.py
-    md5: 53a01c8e9874c816f9c55dbcc7fe8a81
+    md5: 8979f7f753bd9e95cd139e5c111984af
   - path: label
-    md5: c786a6f7cf88ceee7d7b5af317e5cd94.dir
+    md5: b55ab71fea94ebc398649df1588d97d0.dir
   outs:
   - path: snorkel_model
     md5: bd603ad1854a64d034e730d277425a04.dir
