@@ -6,21 +6,24 @@ import yaml
 import sys
 import pandas as pd
 
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
     sys.stderr.write('Arguments error. Usage:\n')
     sys.stderr.write(
-        '\tpython gpt_snorkel_label_model.py data-dir-path model-dir-path\n'
+        '\tpython gpt_snorkel_label_model.py data-dir-path model-dir-path prepare-dir-path\n'
     )
     sys.exit(1)
 
 
 data_path = sys.argv[1]
-modelname = sys.argv[2]
+model_path = sys.argv[2]
+prepare_path=sys.argv[3]
 
-Ltrain=np.load(os.path.join(data_path,'Ltrain.npy'))
-Ltest=np.load(os.path.join(data_path,'Ltest.npy'))
-Ytest=np.load(os.path.join(data_path,'Ytest.npy'))
-train=pd.read_pickle('train.pkl')
+os.makedirs(data_path,exist_ok=True)
+
+Ltrain=np.load(os.path.join(model_path,'Snorkel_Ltrainv2.npy'))
+Ltest=np.load(os.path.join(model_path,'Snorkel_Ltestv2.npy'))
+Ytest=np.load(os.path.join(model_path,'Snorkel_Ytestv2.npy'))
+train=pd.read_pickle(os.path.join(prepare_path,'train.pkl'))
 
 from snorkel.labeling.model import LabelModel
 
@@ -45,8 +48,8 @@ print(f"{'Label Model Accuracy:':<25} {label_model_acc * 100:.1f}%")
 
 #!ls
 
-label_model.save(os.path.join(modelname,'save_snorkel_label_model.pkl'))
-majority_model.save(os.path.join(modelname,'save_snorkel_label_model.pkl'))
+label_model.save(os.path.join(model_path,'save_snorkel_label_lmodel.pkl'))
+majority_model.save(os.path.join(model_path,'save_snorkel_label_mmodel.pkl'))
 
 from snorkel.labeling import filter_unlabeled_dataframe
 df_train_filtered, probs_train_filtered = filter_unlabeled_dataframe(X=train, y=prob_train,L=Ltrain)
@@ -81,7 +84,7 @@ def addNewCat(row):
   return '?'
 
 df_train_filtered['Snokel_Cat']=df_train_filtered.apply(lambda row: addNewCat(row),axis=1)
-df_train_filtered.to_csv(os.path.join(data_path,'df_train_filtered'))
+df_train_filtered.to_csv(os.path.join(data_path,'df_train_filtered.csv'))
 
 df_train_filtered.head()
 

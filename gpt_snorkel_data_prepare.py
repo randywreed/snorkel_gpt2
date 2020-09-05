@@ -2,13 +2,22 @@
 ## create/load data
 import pandas as pd
 import os
+import numpy as np
+import yaml
+
+os.makedirs('prepare',exist_ok=True)
+params=yaml.safe_load(open('params.yaml'))['prepare']
 #filename='dedoose_GPT2 Initial prompts and responses.csv'
-lines=100
+lines=param['lines']
+
 filename='gpt2HfDedPredictBertv3short.csv'
 if not os.path.isfile(filename):
   bfilename="gpt2HfDedPredictBertv3.csv"
   bdf=pd.read_csv(bfilename,error_bad_lines=False)
-  df=bdf[:lines]
+  if lines>0:
+    df=bdf[:lines]
+  else:
+    df=bdf
 else:
   df=pd.read_csv(filename,error_bad_lines=False)
 #df.columns=['participant','group','prompt','resp','question','text'] #dedoose gpt2 prompts and responses
@@ -32,6 +41,6 @@ Ytest
 
 print(df.columns[0])
 df.head()
-train.to_pickle('train.pkl')
-test.to_pickle('test.pkl')
-Ytest.to_pickle('Ytest.pkl')
+train.to_pickle('prepare/train.pkl')
+test.to_pickle('prepare/test.pkl')
+np.save('prepare/Ytest.npy',Ytest)

@@ -2,27 +2,25 @@ import os
 import yaml
 import sys
 
-if len(sys.argv) != 3:
+if len(sys.argv) != 4:
     sys.stderr.write('Arguments error. Usage:\n')
     sys.stderr.write(
-        '\tpython gpt_snorkel_label.py data-dir-path csvfile-dir-path\n'
+        '\tpython gpt_snorkel_label.py data-dir-path csvfile-dir-path ktrian-dir-path\n'
     )
     sys.exit(1)
+data_path= sys.argv[1]
+csv_path= sys.argv[2]
+ktrain_path=sys.argv[3]
 
-data_path = sys.argv[1]
-dirname = sys.argv[2]
-if dirname[-1]!="/":
-    dirname+="/"
+os.makedirs(data_path, exist_ok=True)
 
-#os.makedirs(features_path, exist_ok=True)
-
-#gpt_snorkel_label.py
-#dirname="/spell/snorkel_files/"
-#dirname='/gdrive/My Drive/AI & Tech Research/Religion of GPT2/'
+#)gpt_snorkel_label.py
+#os.path.join(data_path,"/spell/snorkel_fi)les/"
+#os.path.join(data_path,'/gdrive/My Drive/)AI & Tech Research/Religion of GPT2/'
 filename='biblical_names.csv'
 
 import pandas as pd
-df=pd.read_csv(dirname+filename,delimiter=',')
+df=pd.read_csv(filename,delimiter=',')
 Bnames=list(df['terms'])
 
 df.head()
@@ -30,7 +28,7 @@ df.head()
 filename='catholic_terms_rev.csv'
 
 import pandas as pd
-df=pd.read_csv(dirname+filename,delimiter=',')
+df=pd.read_csv(filename,delimiter=',')
 Cathterms=list(df['terms'])
 
 print(Bnames)
@@ -99,7 +97,7 @@ from nltk.tokenize import sent_tokenize
 import nltk
 nltk.download('punkt')
 from statistics import mean
-predictor=ktrain.load_predictor(dirname+'hfdedpredictV3')
+predictor=ktrain.load_predictor(os.path.join(ktrain_path,'hfdedpredictV3'))
 def flmean(x):
     sum=0
     for ele in x:
@@ -188,6 +186,9 @@ lfs=[lf_contains_bible_name,
 
 applier=PandasLFApplier(lfs=lfs)
 
+train=pd.read_pickle(os.path.join(csv_path,'train.pkl'))
+test=pd.read_pickle(os.path.join(csv_path,'test.pkl'))
+
 Ltrain=applier.apply(df=train)
 
 Ltest=applier.apply(df=test)
@@ -195,7 +196,7 @@ Ltest=applier.apply(df=test)
 #Ltrain[:10]
 
 import numpy as np
-
-np.save(dirname+'Snorkel_Ltrainv2',Ltrain)
-np.save(dirname+'Snorkel_Ltestv2',Ltest)
-np.save(dirname+'Snorkel_Ytestv2',Ytest)
+Ytest=np.load(os.path.join(csv_path,'Ytest.npy'))
+np.save(os.path.join(data_path,'Snorkel_Ltrainv2'),Ltrain)
+np.save(os.path.join(data_path,'Snorkel_Ltestv2'),Ltest)
+np.save(os.path.join(data_path,'Snorkel_Ytestv2'),Ytest)
