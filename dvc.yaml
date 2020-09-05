@@ -5,6 +5,8 @@ stages:
     - gpt_snorkel_data_prepare.py
     outs:
     - prepare
+    params:
+    - prepare.lines
   label:
     cmd: python3 gpt_snorkel_label.py label prepare ktrain
     deps:

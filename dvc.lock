@@ -2,7 +2,10 @@ prepare:
   cmd: python3 gpt_snorkel_data_prepare.py
   deps:
   - path: gpt_snorkel_data_prepare.py
-    md5: 4bd7d6eea02c1e1533fc02c91667f396
+    md5: 47cd4087f13fb16181cda448c6d47a0b
+  params:
+    params.yaml:
+      prepare.lines: 100
   outs:
   - path: prepare
     md5: 62a9c0ec7350ea7616145949efbf39f0.dir
