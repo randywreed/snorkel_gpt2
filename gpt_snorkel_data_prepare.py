@@ -8,7 +8,7 @@ import yaml
 os.makedirs('prepare',exist_ok=True)
 params=yaml.safe_load(open('params.yaml'))['prepare']
 #filename='dedoose_GPT2 Initial prompts and responses.csv'
-lines=param['lines']
+lines=params['lines']
 
 filename='gpt2HfDedPredictBertv3short.csv'
 if not os.path.isfile(filename):
