@@ -26,3 +26,13 @@ label_model:
   outs:
   - path: snorkel_model
     md5: bd603ad1854a64d034e730d277425a04.dir
+bert_model:
+  cmd: python3 gpt_snorkel_label_bert_model.py snorkel_model bert_model
+  deps:
+  - path: gpt_snorkel_label_bert_model.py
+    md5: e0db56c9d393aa3afd2e6e1ba1244693
+  - path: snorkel_model
+    md5: 8346ecda12deff1d682393eb6e69cdab.dir
+  outs:
+  - path: bert_model
+    md5: f87797b040621c8e67b2ca870f10a4a0.dir

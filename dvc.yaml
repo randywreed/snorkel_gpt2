@@ -19,3 +19,10 @@ stages:
     - label
     outs:
     - snorkel_model
+  bert_model:
+    cmd: python3 gpt_snorkel_label_bert_model.py snorkel_model bert_model
+    deps:
+    - gpt_snorkel_label_bert_model.py
+    - snorkel_model
+    outs:
+    - bert_model
