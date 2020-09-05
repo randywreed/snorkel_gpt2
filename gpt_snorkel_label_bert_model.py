@@ -28,7 +28,7 @@ MODEL_NAME = 'distilbert-base-uncased'
 model = preprocess.get_classifier()
 learner = ktrain.get_learner(model, train_data=train, val_data=val, batch_size=6)
 
-history=learner.autofit(1e-5)
+history=learner.autofit(1e-5,checkpoint_folder='checkpoint',epochs=200)
 
 learner.save_model(os.path.join(bert_model,"distilbert_trained_model"))
 
