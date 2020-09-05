@@ -1,0 +1,4 @@
+#params.yaml
+
+prepare:
+    lines: 100 # set to 0 for all
