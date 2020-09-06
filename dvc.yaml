@@ -28,3 +28,8 @@ stages:
     - snorkel_model
     outs:
     - bert_model
+    params:
+    - bert_model.epochs
+    metrics:
+    - history.json:
+        cache: false

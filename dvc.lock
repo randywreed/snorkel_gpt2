@@ -33,9 +33,14 @@ bert_model:
   cmd: python3 gpt_snorkel_label_bert_model.py snorkel_model bert_model
   deps:
   - path: gpt_snorkel_label_bert_model.py
-    md5: fc4a73acbc86a6a2cd5686e5676d358e
+    md5: 0632c9e1eaf26e03072efcfc492b9138
   - path: snorkel_model
     md5: 8346ecda12deff1d682393eb6e69cdab.dir
+  params:
+    params.yaml:
+      bert_model.epochs: 1
   outs:
   - path: bert_model
-    md5: accadfbd11b2409234c6249083cb1120.dir
+    md5: d963044a9e98f638dd3b2f35968a6996.dir
+  - path: history.json
+    md5: bd3ed59b9716dc58f1e928ebffeb342b
